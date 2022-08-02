@@ -11,14 +11,12 @@ Post List
                 {% for post in posts_list %}
                     <div class="card shadow-sm my-3">
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <h6 class="card-subtitle mb-2 text-muted small py-2">2 Sep 2021</h6>
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted small py-2">{{ post.date_created }}</h6>
                             <p class="card-text py-3">
-                                Some quick example text to build on the card title and make up the bulk of the card's content.
-                                Some quick example text to build on the card title and make up the bulk of the card's content.
-                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                {{ post.text }}
                             </p>
-                            <div class="btn btn-sm btn-success">Read More</div>
+                            <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-success">Read More</a>
                         </div>
                     </div>
                 {% endfor %}
