@@ -6,22 +6,34 @@ from django.urls import reverse
 class BlogPostTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        pass
-
-    def setUp(self):
-        self.user = User.objects.create(username = 'user1')
-        self.post1 = Post.objects.create(
+        user = User.objects.create(username = 'user1')
+        cls.post1 = Post.objects.create(
             title = 'Post1',
             text = "This is some text inside the First Post of test cases.",
             status = Post.STATUS_CHOICES[0][0], # pub
-            author = self.user ,
+            author = user ,
         )
-        self.post2 = Post.objects.create(
+        cls.post2 = Post.objects.create(
             title = 'Post2',
             text = "This is some text inside the drafts and should not be shown!",
             status = Post.STATUS_CHOICES[1][0], # drf
-            author = self.user ,
+            author = user ,
         )
+
+    # def setUp(self):
+    #     self.user = User.objects.create(username = 'user1')
+    #     self.post1 = Post.objects.create(
+    #         title = 'Post1',
+    #         text = "This is some text inside the First Post of test cases.",
+    #         status = Post.STATUS_CHOICES[0][0], # pub
+    #         author = self.user ,
+    #     )
+    #     self.post2 = Post.objects.create(
+    #         title = 'Post2',
+    #         text = "This is some text inside the drafts and should not be shown!",
+    #         status = Post.STATUS_CHOICES[1][0], # drf
+    #         author = self.user ,
+    #     )
     
     def test_post_list_url(self):
         response = self.client.get('/blog/')
