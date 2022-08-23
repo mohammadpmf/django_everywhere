@@ -13,7 +13,16 @@
                 <h3>Add new Post:</h3>
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form }}
+                    {% comment %} {{ form }} {% endcomment %}
+                    {% comment %} {{ form.as_p }} {% endcomment %}
+                    <table>
+                        {{ form.as_table }}
+                    </table>
+                    {% comment %} <ol>
+                        {{ form.as_ul }}
+                    </ol> {% endcomment %}
+
+
                     {% comment %} <div class="form-group py-2">
                         <label class="py-1">Enter post title</label>
                         <input type="text" class="form-control" placeholder="e.g. Some Title" name="title">

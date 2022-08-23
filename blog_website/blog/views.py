@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render, reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
@@ -49,8 +49,16 @@ def post_create_view(request):
         form = NewPostForm(request.POST)
         if form.is_valid():
             form.save()
-            form = NewPostForm()
+            return redirect('posts_list')
             
     else:
         form = NewPostForm()
     return render (request, 'blog/post_create.html', context={'form': form})
+
+def post_update_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    form = NewPostForm(request.POST or None, instance=post)
+
+    if form.is_valid():
+        form.save()
+    return render(request, 'blog/post_create.html', context={'form': form})
