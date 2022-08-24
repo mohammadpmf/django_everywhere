@@ -8,7 +8,7 @@ from .forms import NewPostForm
 
 def post_list_view(request):
     # posts_list = Post.objects.all() # Hama ro migire.
-    posts_list = Post.objects.filter(status='pub')
+    posts_list = Post.objects.filter(status='pub').order_by('-date_modified')
     return render(request, 'blog/posts_list.html', {'posts_list': posts_list})
 
 def post_detail_view(request, pk):
@@ -61,4 +61,12 @@ def post_update_view(request, pk):
 
     if form.is_valid():
         form.save()
+        return redirect('posts_list')
     return render(request, 'blog/post_create.html', context={'form': form})
+
+def post_delete_view(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('posts_list')
+    return render(request, 'blog/post_delete.html', context={'post': post})

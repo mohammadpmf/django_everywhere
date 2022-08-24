@@ -6,18 +6,18 @@ from django.urls import reverse
 class BlogPostTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        user = User.objects.create(username = 'user1')
+        cls.user = User.objects.create(username = 'user1')
         cls.post1 = Post.objects.create(
             title = 'Post1',
             text = "This is some text inside the First Post of test cases.",
             status = Post.STATUS_CHOICES[0][0], # pub
-            author = user ,
+            author = cls.user ,
         )
         cls.post2 = Post.objects.create(
             title = 'Post2',
             text = "This is some text inside the drafts and should not be shown!",
             status = Post.STATUS_CHOICES[1][0], # drf
-            author = user ,
+            author = cls.user ,
         )
 
     # def setUp(self):
@@ -69,3 +69,43 @@ class BlogPostTest(TestCase):
         self.assertContains(response, self.post1.title)
         self.assertNotContains(response, self.post2.title)
 
+    def test_post_model_str(self):
+        post = self.post1
+        self.assertEqual(str(post), post.title)
+
+    def test_post_detail(self):
+        self.assertEqual(self.post1.title, 'Post1')
+        self.assertEqual(self.post1.text, 'This is some text inside the First Post of test cases.')
+    
+    def test_post_create_view(self):
+        response = self.client.post(reverse('post_create'), {
+            'title': 'Some Title',
+            'text': 'This is some text!',
+            'status': 'pub',
+            'author': self.user.id,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Post.objects.last().title, 'Some Title')
+        self.assertEqual(Post.objects.last().text, 'This is some text!')
+    
+    def test_post_update_view(self):
+        response = self.client.post(reverse('post_update', args=[self.post2.id]), {
+            'title': 'Post2 Updated',
+            'text': 'This text is updated',
+            'status': 'pub',
+            'author': self.post2.author.id,       
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Post.objects.last().title, 'Post2 Updated')
+        self.assertEqual(Post.objects.last().text, 'This text is updated')
+    
+    def test_post_delete_view(self):
+        response = self.client.post(reverse('post_delete', args=[self.post2.id]), {
+            'title': 'Post2 Updated',
+            'text': 'This text is updated',
+            'status': 'pub',
+            'author': self.user.id,       
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Post.objects.last().title, self.post1.title)
+        self.assertEqual(Post.objects.last().text, self.post1.text)
