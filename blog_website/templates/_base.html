@@ -29,7 +29,7 @@
             {% if user.is_authenticated %}
                 Welcome {{ user.username }} | <a class="text-light" href="{% url 'logout' %}">Log Out</a>
             {% else %}
-                <a class="text-light" href="{% url 'login' %}">Log In</a>
+                <a class="text-light" href="{% url 'login' %}">Log In</a> | <a class="text-light" href="{% url 'signup' %}">Sign Up</a>
             {% endif %}
         </div>
     </div>
